@@ -9,7 +9,7 @@ inputs:
   filename:
     description: 'Path and base filename for the key pair'
     required: false
-    default: '~/.ssh/id_rsa'
+    default: 'id_rsa'
   key_type:
     description: 'Type of SSH key to generate (rsa, ed25519, etc.)'
     required: false
@@ -27,22 +27,23 @@ runs:
   using: 'composite'
   steps:
     - name: Create .ssh directory
-      run: mkdir -p ~/.ssh
+      run: mkdir -p $HOME/.ssh
       shell: bash
+      
     
     - name: Generate SSH Key
       run: |
         ssh-keygen -t "${{ inputs.key_type }}" \
         -b "${{ inputs.bits }}" \
         -C "${{ inputs.email }}" \
-        -f "${{ inputs.filename }}" \
+        -f "$HOME/.ssh/${{ inputs.filename }}" \
         -N "${{ inputs.passphrase }}"
       shell: bash
     
     - name: Display public key
       run: |
         echo "SSH public key generated at ${{ inputs.filename }}.pub:"
-        cat "${{ inputs.filename }}.pub"
+        cat "$HOME/.ssh/${{ inputs.filename }}.pub"
       shell: bash
 
 branding:
