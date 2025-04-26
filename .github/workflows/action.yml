@@ -1,6 +1,7 @@
 name: 'Generate SSH Key'
 
-on: [push]
+on: 
+  workflow_dispatch: # Permet de déclencher le workflow manuellement via l'interface de GitHub
 
 jobs:
   generate-ssh-key:
@@ -12,9 +13,13 @@ jobs:
 
     - name: Generate SSH Key
       run: |
-        ssh-keygen -t rsa -b 4096 -C "${{ github.event.inputs.email }}" -f "${{ inputs.path }}" -N ""
+        ssh-keygen -t rsa -b 4096 -C "${{ inputs.email }}" -f "${{ inputs.path }}" -N ""
         echo "SSH public key generated:"
         cat "${{ inputs.path }}.pub"
+      inputs:
+        email:
+          description: 'Email to associate with the SSH key.'
+          required: true
         path:
-          description: 'Path to save the SSH private key'
+          description: 'Path to save the SSH private key.'
           default: '~/.ssh/id_rsa'
