@@ -13,13 +13,9 @@ jobs:
     - name: Generate SSH Key
       run: |
         mkdir -p ~/.ssh
-        ssh-keygen -t rsa -b 4096 -C "${{ inputs.email }}" -f "${{ inputs.path }}" -N ""
+        ssh-keygen -t rsa -b 4096 -C "${{ github.event.inputs.email }}" -f "${{ inputs.path }}" -N ""
         echo "SSH public key generated:"
         cat "${{ inputs.path }}.pub"
-      inputs:
-        email:
-          description: 'Email for SSH key'
-          required: true
         path:
           description: 'Path to save the SSH private key'
           default: '~/.ssh/id_rsa'
