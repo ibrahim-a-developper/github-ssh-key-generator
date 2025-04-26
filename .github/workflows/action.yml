@@ -1,0 +1,25 @@
+name: 'Generate SSH Key'
+
+on: [push]
+
+jobs:
+  generate-ssh-key:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Generate SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keygen -t rsa -b 4096 -C "${{ inputs.email }}" -f "${{ inputs.path }}" -N ""
+        echo "SSH public key generated:"
+        cat "${{ inputs.path }}.pub"
+      inputs:
+        email:
+          description: 'Email for SSH key'
+          required: true
+        path:
+          description: 'Path to save the SSH private key'
+          default: '~/.ssh/id_rsa'
