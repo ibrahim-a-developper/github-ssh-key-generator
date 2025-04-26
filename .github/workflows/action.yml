@@ -12,7 +12,6 @@ jobs:
 
     - name: Generate SSH Key
       run: |
-        mkdir -p ~/.ssh
         ssh-keygen -t rsa -b 4096 -C "${{ github.event.inputs.email }}" -f "${{ inputs.path }}" -N ""
         echo "SSH public key generated:"
         cat "${{ inputs.path }}.pub"
