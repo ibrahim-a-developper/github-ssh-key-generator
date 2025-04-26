@@ -1,0 +1,50 @@
+name: 'SSH Key Generator'
+description: 'Generate SSH RSA 4096-bit key pair in ~/.ssh/id_rsa'
+author: 'toureibrahimd2'
+
+inputs:
+  email:
+    description: 'Email to associate with the SSH key'
+    required: true
+  filename:
+    description: 'Path and base filename for the key pair'
+    required: false
+    default: '~/.ssh/id_rsa'
+  key_type:
+    description: 'Type of SSH key to generate (rsa, ed25519, etc.)'
+    required: false
+    default: 'rsa'
+  bits:
+    description: 'Number of bits for the key (for RSA keys)'
+    required: false
+    default: '4096'
+  passphrase:
+    description: 'Passphrase for the key (leave empty for no passphrase)'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Create .ssh directory
+      run: mkdir -p ~/.ssh
+      shell: bash
+    
+    - name: Generate SSH Key
+      run: |
+        ssh-keygen -t "${{ inputs.key_type }}" \
+        -b "${{ inputs.bits }}" \
+        -C "${{ inputs.email }}" \
+        -f "${{ inputs.filename }}" \
+        -N "${{ inputs.passphrase }}"
+      shell: bash
+    
+    - name: Display public key
+      run: |
+        echo "SSH public key generated at ${{ inputs.filename }}.pub:"
+        cat "${{ inputs.filename }}.pub"
+      shell: bash
+
+branding:
+  icon: 'key'
+  color: 'blue'
