@@ -1,33 +1,75 @@
-# SSH Key Generator GitHub Action
+# SSH Key Generator - GitHub Action
 
-This GitHub Action generates an SSH key pair and outputs the public key. The private key is stored at the specified location, with a default path of `~/.ssh/id_rsa`. You can pass an email to personalize the key generation.
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-ready-blue)
+![License](https://img.shields.io/github/license/ibrahim-a-developper/github-ssh-key-generator)
+
+A GitHub Action that generates SSH key pairs (RSA/ed25519) for use in your workflows. Perfect for automating deployments, server access, or any task requiring SSH authentication.
+
+## Features
+
+- 🔐 Generate RSA (default) or ed25519 SSH keys
+- ⚙️ Customizable key strength (bits for RSA)
+- 📁 Automatic key storage in `$HOME/.ssh/`
+- 🔑 Optional passphrase protection
+- 📋 Public key output in workflow logs
+
+## Usage
+
+### Basic Example
+
+```yaml
+steps:
+  - uses: ibrahim-a-developper/github-ssh-key-generator@v1
+    with:
+      email: 'your-email@example.com'
+```
+
+### Advanced Example
+
+```yaml
+steps:
+  - uses: ibrahim-a-developper/github-ssh-key-generator@v1
+    with:
+      email: 'ci@your-org.com'
+      key_type: 'ed25519'  # or 'rsa'
+      bits: '4096'         # for RSA keys
+      filename: 'github_actions_key'
+      passphrase: '${{ secrets.SSH_PASSPHRASE }}'
+```
 
 ## Inputs
 
-### `email`
-**Required**  
-The email address to associate with the SSH key. This is used to set the key comment.
-
-### `path`
-**Optional**  
-The path where the private key will be saved. The default is `~/.ssh/id_rsa`.
+| Parameter    | Required | Default | Description |
+|-------------|----------|---------|-------------|
+| `email`     | Yes      | -       | Email to associate with the key |
+| `key_type`  | No       | `rsa`   | Key type (`rsa` or `ed25519`) |
+| `bits`      | No       | `4096`  | Key strength (for RSA only) |
+| `filename`  | No       | `id_rsa`| Key filename (without path) |
+| `passphrase`| No       | `""`    | Key passphrase (empty for none) |
 
 ## Outputs
 
-This Action does not produce any direct outputs. However, the public key will be generated at the following location:
-- `~/.ssh/id_rsa.pub` (or the custom path if specified).
+The action will:
+1. Generate a key pair in `$HOME/.ssh/`
+2. Print the public key in the workflow logs
+3. Set appropriate permissions (600 for private key)
 
-## Example Usage
+## Security Notes
 
-### Example 1: Using the Action in a Workflow
+🔒 **Important Security Considerations:**
+- Never commit private keys to your repository
+- Consider using GitHub Secrets for passphrases
+- Generated keys persist only for the workflow duration (ephemeral runners)
+- For production use, consider using GitHub's built-in deploy keys instead
 
-```yaml
-jobs:
-  generate-ssh-key:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate SSH Key
-        uses: your-username/ssh-key-generator-action@v1
-        with:
-          email: "example@gmail.com"
-          path: "~/.ssh/id_rsa"
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+Found a bug or have a feature request? [Open an issue](https://github.com/ibrahim-a-developper/github-ssh-key-generator/issues).
+
+---
+
+✨ **Pro Tip:** Combine this with the [SSH Agent Action](https://github.com/webfactory/ssh-agent) for complete SSH key management in your workflows!
