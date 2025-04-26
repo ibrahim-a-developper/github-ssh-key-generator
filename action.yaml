@@ -1,6 +1,6 @@
 name: 'SSH Key Generator'
 description: 'Generate SSH RSA 4096-bit key pair in ~/.ssh/id_rsa'
-author: 'toureibrahimd2'
+author: 'Toure Brahim'
 
 inputs:
   email:
@@ -26,10 +26,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Create .ssh directory
-      run: mkdir -p ~/.ssh
-      shell: bash
-    
+  
     - name: Generate SSH Key
       run: |
         ssh-keygen -t "${{ inputs.key_type }}" \
