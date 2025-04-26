@@ -26,7 +26,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-  
+    - name: Create .ssh directory
+      run: mkdir -p ~/.ssh
+      shell: bash
+    
     - name: Generate SSH Key
       run: |
         ssh-keygen -t "${{ inputs.key_type }}" \
